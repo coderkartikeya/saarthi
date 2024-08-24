@@ -1,2 +1,2 @@
-Branch Suggestions
-Example for branch name - name-branch
+#Branch
+Format - name-branch
