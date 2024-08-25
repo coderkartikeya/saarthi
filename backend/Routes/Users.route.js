@@ -3,7 +3,7 @@ const router = express.Router();
 import bcrypt from "bcryptjs";
 
 // collection import
-import User from "../models/User.js";
+import User from "../models/userSchema";
 
 // signup
 router.post("/signup", async (req, res) => {
