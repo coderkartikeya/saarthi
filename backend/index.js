@@ -1,24 +1,28 @@
 import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-const MongoDbURI = "mongodb+srv://prathamrawat2004:DOSwxk66FVQV0Xf6@cluster0.kb3ux.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 import usersRoute from "./Routes/Users.route.js";
 import cors from "cors";
 
-const app = express();
-
 dotenv.config();
+
+const app = express();
 const Port = process.env.PORT || 4000;
 
 // middlewares
 app.use(cors());
 app.use(express.json());
 
-// connecting to db
-mongoose.connect(MongoDbURI).then(()=>{
+// Connecting to the database
+const MongoDbURI = process.env.MongoDBURI;  // Get MongoDB URI from .env file
+
+mongoose.connect(MongoDbURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(() => {
     console.log("Connected to database");
-}).catch(()=>{
-    console.log("Not connected");
+}).catch((error) => {
+    console.log("Not connected", error);
 });
 
 // routes
