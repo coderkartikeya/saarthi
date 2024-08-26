@@ -24,6 +24,11 @@ const medicalRecordSchema = new mongoose.Schema({
     },
     notes: { 
         type: String 
+    },
+    hospitalId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Hospital',
+        required: true // Required to track the hospital where the record was created
     }
 }, { timestamps: true });
 

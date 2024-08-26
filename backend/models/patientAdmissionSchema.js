@@ -25,6 +25,11 @@ const patientAdmissionSchema = new mongoose.Schema({
         type: String, 
         enum: ['Admitted', 'Discharged', 'Pending'], 
         default: 'Pending' 
+    },
+    hospitalId: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Hospital',
+        required: true // Required for tracking which hospital the admission belongs to
     }
 }, { timestamps: true });
 

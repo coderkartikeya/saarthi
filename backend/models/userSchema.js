@@ -22,11 +22,12 @@ const userSchema = new mongoose.Schema({
         required: true,
         minlength: 6,
     },
-    hospitalAdmitted: {
-        type: String,
+    hospitalId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Hospital', // Reference to Hospital model
         required: function() {
-            return this.role === 'Patient';
-        },
+            return this.role === 'Doctor'; // Only required for doctors
+        }
     },
     role: {
         type: String,
@@ -38,7 +39,7 @@ const userSchema = new mongoose.Schema({
 // Hashing password before saving 
 userSchema.pre('save', async function(next) {
     if (!this.isModified('password')) {
-        next();
+        return next();
     }
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);

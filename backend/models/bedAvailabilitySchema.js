@@ -22,6 +22,11 @@ const bedAvailabilitySchema = new mongoose.Schema({
     lastUpdated: { 
         type: Date, 
         default: Date.now 
+    },
+    hospitalId: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Hospital',
+        required: true // Required to identify the hospital where the beds are available
     }
 }, { timestamps: true });
 

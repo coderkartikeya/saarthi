@@ -14,6 +14,11 @@ const postSchema = new mongoose.Schema({
         ref: 'User',
         required: true,
     },
+    hospitalId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Hospital',
+        required: true // or adjust based on your requirements
+    },
     comments: [{
         author: {
             type: mongoose.Schema.Types.ObjectId,
@@ -35,22 +40,5 @@ const postSchema = new mongoose.Schema({
     }]
 }, { timestamps: true });
 
-const communitySchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true,
-        unique: true,
-    },
-    description: {
-        type: String,
-        required: true,
-    },
-    members: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-    }],
-    posts: [postSchema],
-}, { timestamps: true });
-
-const Community = mongoose.model('Community', communitySchema);
-export default Community;
+const Post = mongoose.model('Post', postSchema);
+export default Post;

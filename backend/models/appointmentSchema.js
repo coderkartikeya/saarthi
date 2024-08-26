@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const appointmentSchema = new mongoose.Schema({
     patient: { 
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'User', // 'User' means its paitent
+        ref: 'User', // 'User' means its patient
         required: true 
     },
     doctor: { 
@@ -27,9 +27,10 @@ const appointmentSchema = new mongoose.Schema({
     notes: {
         type: String
     },
-    hospitalName: {
-        type: String,
-        required: true
+    hospitalId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Hospital',
+        required: true // Required to track which hospital the appointment is scheduled with
     }
 }, { timestamps: true });
 

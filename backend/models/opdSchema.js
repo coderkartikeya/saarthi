@@ -30,6 +30,11 @@ const opdSchema = new mongoose.Schema({
         type: String,
         enum: ['Scheduled', 'Completed', 'Cancelled'],
         default: 'Scheduled'
+    },
+    hospitalId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Hospital',
+        required: true // Required to identify the hospital where the OPD is scheduled
     }
 }, { timestamps: true });
 

@@ -12,6 +12,11 @@ const departmentSchema = new mongoose.Schema({
     head: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Doctor' // Reference to the Doctor who heads the department
+    },
+    hospitalId: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Hospital',
+        required: true // Required to identify the hospital to which the department belongs
     }
 }, { timestamps: true });
 
