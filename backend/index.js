@@ -13,21 +13,28 @@ const Port = process.env.PORT || 4000;
 app.use(cors());
 app.use(express.json());
 
-// Connecting to the database
-const MongoDbURI = process.env.MongoDBURI;  // Get MongoDB URI from .env file
+// Validate MongoDB URI environment variable
+if (!process.env.MongoDBURI) {
+  console.error("Error: MongoDBURI environment variable is not set");
+  process.exit(1);
+}
 
-mongoose.connect(MongoDbURI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}).then(() => {
+// Connecting to the database
+mongoose.connect(process.env.MongoDBURI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+  .then(() => {
     console.log("Connected to database");
-}).catch((error) => {
-    console.log("Not connected", error);
-});
+  })
+  .catch((error) => {
+    console.error("Error connecting to database:", error);
+    process.exit(1);
+  });
 
 // routes
-app.use("/User",usersRoute);
+app.use("/User", usersRoute);
 
 app.listen(Port, () => {
-    console.log(`listening on port ${Port}`);
-})
+  console.log(`Listening on port ${Port}`);
+});
