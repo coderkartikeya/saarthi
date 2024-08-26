@@ -23,6 +23,11 @@ const inventoryItemSchema = new mongoose.Schema({
     lastUpdated: { 
         type: Date, 
         default: Date.now 
+    },
+    hospitalId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Hospital',
+        required: true // Required if you want to track which hospital the inventory item belongs to
     }
 }, { timestamps: true });
 
