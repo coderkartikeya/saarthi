@@ -5,24 +5,41 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+
     email: {
         type: String,
         required: true,
         unique: true
     },
+
     password: {
         type: String,
         required: true,
     },
-    hospitalAdmitted: {
-        type: String,
-        required: true,
+
+    dateOfBirth: {
+        type: Date,
+        default: null // Default value if not provided
     },
-    role: {
+    gender: {
         type: String,
-        enum: ['Doctor', 'Patient'],
-        required: true
+        default: "" // Default value if not provided
     },
+    contact: {
+        type: Number,
+        default: null, // Default value if not provided
+       
+    },
+    address: {
+        type: String,
+        default: "" // Default value if not provided
+    },
+    medicalHistory: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Medical Record',
+        default: "" // Default value if not provided
+    }
+
 }, { timestamps: true });
 
 const User = mongoose.model("User", userSchema);

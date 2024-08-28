@@ -6,18 +6,22 @@ const doctorSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
+
     specialization: { 
         type: String, 
         required: true 
     },
+
     contactNumber: { 
         type: String, 
         required: true 
     },
+
     department: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Department'
     },
+    
     availability: [{
         day: { 
             type: String, 
