@@ -2,6 +2,9 @@ import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import usersRoute from "./Routes/Users.route.js";
+import postsRoute from "./Routes/Post.route.js";
+import commentRoute from "./Routes/Comment.route.js";
+
 import cors from "cors";
 
 dotenv.config();
@@ -28,12 +31,14 @@ mongoose.connect(process.env.MongoDBURI, {
     console.log("Connected to database");
   })
   .catch((error) => {
-    console.error("Error connecting to database:", error);
+    console.error("Error connecting to database: ", error);
     process.exit(1);
   });
 
 // routes
 app.use("/User", usersRoute);
+app.use("/posts", postsRoute);
+app.use("/comments", commentRoute);
 
 app.listen(Port, () => {
   console.log(`Listening on port ${Port}`);
