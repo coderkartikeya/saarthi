@@ -1,14 +1,14 @@
 "use client";
 import React, { useState } from "react";
 
-const Login = () => {
+const Signup = () => {
   const [role, setRole] = useState("patient"); // Toggle between 'patient' and 'hospital'
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-6">
       <div className="bg-white shadow-lg rounded-lg max-w-md w-full p-8">
         <h1 className="text-2xl font-bold text-center mb-6">
-          {role === "patient" ? "Patient Login" : "Hospital Login"}
+          {role === "patient" ? "Patient Signup" : "Hospital Signup"}
         </h1>
 
         {/* Role Selection */}
@@ -31,8 +31,16 @@ const Login = () => {
           </button>
         </div>
 
-        {/* Login Form */}
+        {/* Signup Form */}
         <form>
+          <div className="mb-4">
+            <label className="block text-gray-700 mb-2">Name</label>
+            <input
+              type="text"
+              className="w-full p-3 border rounded-lg"
+              placeholder="Enter your name"
+            />
+          </div>
           <div className="mb-4">
             <label className="block text-gray-700 mb-2">Email</label>
             <input
@@ -49,15 +57,27 @@ const Login = () => {
               placeholder="Enter your password"
             />
           </div>
+
+          {role === "hospital" && (
+            <div className="mb-4">
+              <label className="block text-gray-700 mb-2">Hospital Name</label>
+              <input
+                type="text"
+                className="w-full p-3 border rounded-lg"
+                placeholder="Enter hospital name"
+              />
+            </div>
+          )}
+
           <button className="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600">
-            Login
+            Sign Up
           </button>
         </form>
 
         <p className="text-center text-gray-600 mt-4">
-          Don't have an account?{" "}
-          <a href="/signup" className="text-blue-500 hover:underline">
-            Sign up
+          Already have an account?{" "}
+          <a href="/login" className="text-blue-500 hover:underline">
+            Log in
           </a>
         </p>
       </div>
@@ -65,4 +85,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Signup;

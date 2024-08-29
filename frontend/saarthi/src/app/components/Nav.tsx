@@ -12,10 +12,10 @@ const Nav = () => {
         <div className='absolute top-20 right-0 w-40 text-white shadow-md py-4 flex items-center justify-center'>
           <ul>
             <li>
-              <a href='#' className='text-lg font-bold shadow-md shadow-white p-1'>About </a>
+              <a href='/About' className='text-lg font-bold shadow-md shadow-white p-1'>About </a>
             </li>
             <li>
-              <a href='#' className='text-lg font-bold shadow-md shadow-white p-1'>Contact Us</a>
+              <a href='/contactus' className='text-lg font-bold shadow-md shadow-white p-1'>Contact Us</a>
             </li>
             <li>
               <Link href='/login' className='text-lg font-bold shadow-md shadow-white p-1'>Login</Link>
@@ -35,10 +35,10 @@ const Nav = () => {
             </h1>
             <div className='hidden sm:flex gap-10 text-white '>        
               <div className='hover:rounded hover:border-2 md:p-1 hover:shadow-md hover:shadow-white'>
-                <a href='#' className='text-lg font-bold'>About </a>
+                <a href='/About' className='text-lg font-bold'>About </a>
               </div>
               <div className='hover:rounded hover:border-2 md:p-1 hover:shadow-md hover:shadow-white'>
-                <a href='#' className='text-lg font-bold'>Contact Us</a>
+                <a href='/contactus' className='text-lg font-bold'>Contact Us</a>
               </div>
               <div className='hover:rounded hover:border-2 md:p-1 hover:shadow-md hover:shadow-white'>
                 <Link href='/login' className='text-lg font-bold'>Login</Link>
