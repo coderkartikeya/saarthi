@@ -61,7 +61,10 @@ const SideNav = (props:any) => {
       </Link>
     </div>
     <div className={`flex items-center mb-4 p-5 rounded   hover:bg-zinc-800`}>
-      <button className='flex' onClick={()=>router.push('/')}>
+      <button className='flex' onClick={()=>{
+        localStorage.clear();
+        router.push('/');
+      }}>
       <span className='mr-2 text-white'>
         <FaSignOutAlt size={24} />
       </span>
