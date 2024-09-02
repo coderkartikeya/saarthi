@@ -11,44 +11,42 @@ import MedicalRecord from "../models/medicalRecordSchema.js";
 router.post("/signup", async (req, res) => {
     const { fullname, email, password, gender, dateOfBirth, contact, address } = req.body;
     try {
-      // Check if user already exists
-      const user = await User.findOne({ email: email });
-      if (user) {
-        return res.status(400).json({ message: "User already exists!" });
-      }
-  
-      if (!password) {
-        return res.status(400).json({ message: "Password is required" });
-      }
-  
-      // Hash the password
-      const hashPassword = await bcrypt.hash(password, 10);
-  
-      // Create and save new user
-      const createdUser = new User({
-        fullname: fullname,
-        email: email,
-        password: hashPassword,
-        gender: gender,
-        dateOfBirth: dateOfBirth,
-        contact: contact,
-        address: address
-      });
-  
-      await createdUser.save();
-  
-      res.status(201).json({
-        message: "User created successfully!",
-        user: {
-          _id: createdUser._id,
-          email: createdUser.email
+        // Check if user already exists
+        const user = await User.findOne({ email: email });
+        if (user) {
+            return res.status(400).json({ message: "User already exists!" });
         }
-      });
+
+        // Hash the password
+        const hashPassword = await bcrypt.hash(password, 10);
+
+        // Create and save new user
+        const createdUser = new User({
+            fullname: fullname,
+            email: email,
+            password: hashPassword,
+            gender: gender,
+            dateOfBirth: dateOfBirth,
+            contact: contact,
+            address: address,
+           
+
+        });
+
+        await createdUser.save();
+
+        res.status(201).json({
+            message: "User created successfully!",
+            user: {
+                _id: createdUser._id,
+                email: createdUser.email
+            }
+        });
     } catch (error) {
-      console.log(error);
-      res.status(500).json({ message: "Server error" });
+        console.log(error);
+        res.status(500).json({ message: "Server error", error: error.message });
     }
-  });
+});
 
 // login
 router.post("/login", async (req, res) => {
@@ -103,7 +101,7 @@ router.get("/profile/:id", async (req, res) => {
 // Update user details with default fields
 router.put("/updatePatientProfile/:id", async (req, res) => {
     const { id } = req.params; // Get user ID from the route parameters
-    const { fullname,dateOfBirth, gender, contact, address, medicalHistory } = req.body;
+    const { dateOfBirth, gender, contact, address, medicalHistory } = req.body;
 
     try {
         // Find the user by ID
@@ -113,17 +111,13 @@ router.put("/updatePatientProfile/:id", async (req, res) => {
             return res.status(404).json({ message: "User not found" });
         }
 
-
         // Prepare the update object
-        const updateFields = {
-            fullname: fullname,
-            dateOfBirth: dateOfBirth,
-            gender: gender,
-            contact: contact,
-            address: address,
-            medicalHistory: medicalHistory
-        };
-        
+        const updateFields = {};
+        if (dateOfBirth !== undefined) updateFields.dateOfBirth = dateOfBirth;
+        if (gender !== undefined) updateFields.gender = gender;
+        if (contact !== undefined) updateFields.contact = contact;
+        if (address !== undefined) updateFields.address = address;
+        if (medicalHistory !== undefined) updateFields.medicalHistory = medicalHistory;
 
         // Update the user document
         const updatedUser = await User.findByIdAndUpdate(
@@ -159,6 +153,11 @@ router.post("/medicalRecord", async (req, res) => {
 
         // Save the medical record to the database
         const savedMedicalRecord = await newMedicalRecord.save();
+
+        // Update the user's medicalHistory with the new medical record's ID
+        await User.findByIdAndUpdate(patient, {
+            $push: { medicalHistory: savedMedicalRecord._id }
+        });
 
         res.status(201).json({
             message: "Medical Record Added",
