@@ -45,7 +45,7 @@ const SideNavHospital = (props:any) => {
             </Link>
           </div>
           <div className={`flex items-center mb-4 p-5 rounded ${props.name=='charts' ? 'bg-zinc-800' : ''} hover:bg-zinc-800`}>
-            <Link href={`/hospital/charts`} className='flex flex-row'>
+            <Link href={`/hospital/medicine`} className='flex flex-row'>
               <span className='mr-2 text-white'>
                 <FaChartBar size={24} />
               </span>
@@ -118,7 +118,7 @@ const SideNavHospital = (props:any) => {
                 <h1 className='text-2xl text-white'>Community</h1>
               </div>
             </Link>
-            <Link href={`/hospital/charts`} className='flex flex-row'>
+            <Link href={`/hospital/medicine`} className='flex flex-row'>
               <div className='flex items-center mb-4 md:p-5 p-3 rounded hover:bg-zinc-800'>
                 <span className='mr-2 text-white'>
                   <FaChartBar size={24} />
