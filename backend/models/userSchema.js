@@ -1,45 +1,33 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
-    fullname: {
+    name: {
         type: String,
-        required: true
+        required: true,
     },
-
     email: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
     },
-
     password: {
         type: String,
         required: true,
     },
-
-    dateOfBirth: {
-        type: Date,
-        default: null // Default value if not provided
-    },
-    gender: {
-        type: String,
-        default: "" // Default value if not provided
-    },
     contact: {
         type: String,
-        unique: true,
-        default: "", // Default value is undefined
+        unique: true, 
+        default: "" 
     },
     address: {
         type: String,
-        default: "" // Default value if not provided
+        default: "",
     },
     medicalHistory: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'MedicalRecord',
         default: [] // Default value if not provided
-    }]
-
+    }],
 }, { timestamps: true });
 
 const User = mongoose.model("User", userSchema);

@@ -1,8 +1,51 @@
 "use client";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 const Signup = () => {
-  const [role, setRole] = useState("patient"); // Toggle between 'patient' and 'hospital'
+  const router =useRouter();
+  const [role, setRole] = useState("patient"); 
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [email,setEmail]=useState("");
+  const [phone,setPhone]=useState("");
+
+  const signup=async()=>{
+    try{
+      if(role==='patient'){
+      const response=await fetch('http://localhost:4000/User/signup',{
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+        },
+        body:JSON.stringify({
+          fullname:username,
+          email:email,
+          password:password,
+          gender:"",
+          dateOfBirth:"",
+          contact:phone,
+          address:""
+        })
+
+      })
+      const data=await response.json()
+      if(response.status==201){
+        
+        
+        localStorage.setItem('userId',data.user._id);
+        localStorage.setItem('email',data.user.email);
+        router.push('/patient');
+        
+
+      }
+      
+    }
+    }catch(error){
+      console.error(error);
+    }
+
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-6">
@@ -11,7 +54,7 @@ const Signup = () => {
           {role === "patient" ? "Patient Signup" : "Hospital Signup"}
         </h1>
 
-        {/* Role Selection */}
+        
         <div className="flex justify-center mb-4">
           <button
             className={`px-4 py-2 rounded-l-lg ${
@@ -31,7 +74,7 @@ const Signup = () => {
           </button>
         </div>
 
-        {/* Signup Form */}
+        
         <form>
           <div className="mb-4">
             <label className="block text-gray-700 mb-2">Name</label>
@@ -39,6 +82,7 @@ const Signup = () => {
               type="text"
               className="w-full p-3 border rounded-lg"
               placeholder="Enter your name"
+              onChange={(e)=>setUsername(e.target.value)}
             />
           </div>
           <div className="mb-4">
@@ -47,6 +91,16 @@ const Signup = () => {
               type="email"
               className="w-full p-3 border rounded-lg"
               placeholder="Enter your email"
+              onChange={(e)=>setEmail(e.target.value)}
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 mb-2">Contact</label>
+            <input
+              type="contact"
+              className="w-full p-3 border rounded-lg"
+              placeholder="Enter your contact no."
+              onChange={(e)=>setPhone(e.target.value)}
             />
           </div>
           <div className="mb-4">
@@ -55,6 +109,7 @@ const Signup = () => {
               type="password"
               className="w-full p-3 border rounded-lg"
               placeholder="Enter your password"
+              onChange={(e)=>setPassword(e.target.value)}
             />
           </div>
 
@@ -69,7 +124,7 @@ const Signup = () => {
             </div>
           )}
 
-          <button className="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600">
+          <button className="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600" onClick={signup}>
             Sign Up
           </button>
         </form>

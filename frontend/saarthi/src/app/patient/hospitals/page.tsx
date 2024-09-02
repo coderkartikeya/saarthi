@@ -22,32 +22,35 @@ const hospitals: Hospital[] = [
 const HospitalListPage = () => {
   return (
     <div>
-      <SideNav name={`hospital`}/>
-    <div className="max-w-6xl mx-auto p-6 bg-gradient-to-r from-green-200 to-blue-200 rounded-xl shadow-lg mt-10 md:ml-[300px]">
-      <h1 className="text-4xl font-bold text-gray-900 text-center mb-8">Available Hospitals</h1>
+      <SideNav name="hospital" />
+      <div className="max-w-6xl mx-auto p-6 bg-gradient-to-r from-green-200 to-blue-200 rounded-xl shadow-lg mt-10 md:ml-[300px]">
+        <h1 className="text-4xl font-bold text-gray-900 text-center mb-8">Available Hospitals</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {hospitals.map((hospital) => (
-          <div key={hospital.id} className="bg-white rounded-lg shadow-md p-6 border border-gray-200 hover:shadow-lg transition-shadow">
-            <div className="flex items-center mb-4">
-              <FaHospitalAlt className="text-green-500 text-3xl mr-3" />
-              <h2 className="text-2xl font-semibold text-gray-800">{hospital.name}</h2>
-            </div>
-            <div className="text-gray-600 mb-2 flex items-center">
-              <FaMapMarkerAlt className="mr-2 text-gray-500" /> {hospital.location}
-            </div>
-            <div className="text-gray-600 mb-4 flex items-center">
-              <FaBed className="mr-2 text-gray-500" /> {hospital.availableBeds} Beds Available
-            </div>
-            <Link href={hospital.profileUrl}>
-              <div className="bg-green-500 text-white text-center font-bold py-2 px-4 rounded-lg hover:bg-green-600 transition-colors">
-                View Profile
+        <div className="space-y-6">
+          {hospitals.map((hospital) => (
+            <div
+              key={hospital.id}
+              className="flex items-center bg-white rounded-lg shadow-md p-4 border border-gray-200 hover:shadow-lg transition-shadow"
+            >
+              <FaHospitalAlt className="text-green-500 text-4xl mr-4" />
+              <div className="flex-1">
+                <h2 className="text-2xl font-semibold text-gray-800">{hospital.name}</h2>
+                <div className="text-gray-600 mb-2 flex items-center">
+                  <FaMapMarkerAlt className="mr-2 text-gray-500" /> {hospital.location}
+                </div>
+                <div className="text-gray-600 flex items-center">
+                  <FaBed className="mr-2 text-gray-500" /> {hospital.availableBeds} Beds Available
+                </div>
               </div>
-            </Link>
-          </div>
-        ))}
+              <Link href={'/profile_hospital'}>
+                <div className="bg-green-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-600 transition-colors">
+                  View Profile
+                </div>
+              </Link>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
     </div>
   );
 };
