@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 
 // collection import
 import User from "../models/userSchema.js";
+import MedicalRecord from "../models/medicalRecordSchema.js";
 
 
 // Signup route
@@ -77,26 +78,25 @@ router.post("/login", async (req, res) => {
 });
 
 // Get Patient Profile by ID
+// Get Patient Profile by ID
 router.get("/profile/:id", async (req, res) => {
     try {
-        // Extract the patient ID from the request parameters
         const { id } = req.params;
 
-        // Find the patient by ID
-        const patient = await User.findById(id);
+        // Find the patient by ID and populate medicalHistory
+        const patient = await User.findById(id).populate('medicalHistory');
 
-        // If patient is not found, return a 404 response
         if (!patient) {
             return res.status(404).json({ message: "Patient not found" });
         }
 
-        // Return the patient details
         res.status(200).json(patient);
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: "Server error" });
     }
 });
+
 
 
 // patient profile
@@ -141,6 +141,37 @@ router.put("/updatePatientProfile/:id", async (req, res) => {
         res.status(500).json({ message: "Server error" });
     }
 });
+
+// adding User's medical records
+router.post("/medicalRecord", async (req, res) => {
+    const { patient, doctor, date, diagnosis, prescription, hospital } = req.body;
+
+    try {
+        // Create a new medical record instance
+        const newMedicalRecord = new MedicalRecord({
+            patient,
+            doctor,
+            date: date || Date.now(), // Use provided date or default to now
+            diagnosis,
+            prescription,
+            hospital: hospital// Use provided hospital or default to a space
+        });
+
+        // Save the medical record to the database
+        const savedMedicalRecord = await newMedicalRecord.save();
+
+        res.status(201).json({
+            message: "Medical Record Added",
+            data: savedMedicalRecord
+        });
+
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+
+
+})
 
 
 

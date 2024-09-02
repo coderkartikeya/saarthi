@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import usersRoute from "./Routes/Users.route.js";
 import postsRoute from "./Routes/Post.route.js";
 import commentRoute from "./Routes/Comment.route.js";
+import hospitalsRoute from "./Routes/Hospitals.route.js";
 
 import cors from "cors";
 
@@ -39,6 +40,7 @@ mongoose.connect(process.env.MongoDBURI, {
 app.use("/User", usersRoute);
 app.use("/posts", postsRoute);
 app.use("/comments", commentRoute);
+app.use("/hospital", hospitalsRoute);
 
 app.listen(Port, () => {
   console.log(`Listening on port ${Port}`);

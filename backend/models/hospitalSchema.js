@@ -10,18 +10,15 @@ const hospitalSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    patientAdmissions:{
+        type: Number,
+        default: 0
+    },
     totalDoctors: {
         type: Number,
         default: 0
     },
-    totalBeds: {
-        type: Number,
-        required: true
-    },
-    availableBeds: {
-        type: Number,
-        required: true
-    },
+    
 }, { timestamps: true });
 
 const Hospital = mongoose.model('Hospital', hospitalSchema);
