@@ -28,7 +28,8 @@ router.post("/signup", async (req, res) => {
             gender: gender,
             dateOfBirth: dateOfBirth,
             contact: contact,
-            address: address
+            address: address,
+           
 
         });
 
@@ -43,7 +44,7 @@ router.post("/signup", async (req, res) => {
         });
     } catch (error) {
         console.log(error);
-        res.status(500).json({ message: "Server error" });
+        res.status(500).json({ message: "Server error", error: error.message });
     }
 });
 
@@ -152,6 +153,11 @@ router.post("/medicalRecord", async (req, res) => {
 
         // Save the medical record to the database
         const savedMedicalRecord = await newMedicalRecord.save();
+
+        // Update the user's medicalHistory with the new medical record's ID
+        await User.findByIdAndUpdate(patient, {
+            $push: { medicalHistory: savedMedicalRecord._id }
+        });
 
         res.status(201).json({
             message: "Medical Record Added",

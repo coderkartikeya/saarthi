@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema({
     contact: {
         type: String,
         unique: true,
-        default: "", // Default value is undefined
+        required: true
     },
     address: {
         type: String,
@@ -37,7 +37,7 @@ const userSchema = new mongoose.Schema({
     medicalHistory: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'MedicalRecord',
-        default: [] // Default value if not provided
+        default: [] // Default value should be an empty array
     }]
 
 }, { timestamps: true });
