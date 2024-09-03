@@ -37,7 +37,7 @@ const SideNav = (props:any) => {
       </Link>
     </div>
     <div className={`flex items-center mb-4 p-5 rounded  ${props.name=='beds'?`bg-zinc-800`:``} hover:bg-zinc-800`}>
-      <Link href={`/patient/history`} className='flex flex-row'>
+      <Link href={`/patient/beds`} className='flex flex-row'>
         <span className='mr-2 text-white'>
           <FaBed size={24} />
         </span>

@@ -1,105 +1,85 @@
-'use client'
+'use client';
 import React, { useEffect, useState } from 'react';
 import SideNav from '@/app/components/SideNav';
 
-interface patient{
-  fullname:String,
-  dateOfBirth:Date,
-  gender:String,
-  contact:String,
-  address:String,
-  medicalHistory:[]
+// Define the interface based on the schema provided
+interface Admission {
+  patient:string;
+  doctor: string;
+  date: string; // Keeping it as a string for easier handling, could be Date if needed
+  diagnosis: string;
+  prescription: string;
+  hospital?: string;
 }
-interface admission{
-  hospitalName: String,
-  admissionDate: String,
-  dischargeDate: String,
-  notes: String,
+
+interface Comment {
+  date: string;
+  content: string;
 }
+
 const PatientHistory = () => {
-  const [admissions, setAdmissions] = useState([]);
-  const [patient,setPatient]=useState<patient |null >()
-  useEffect(()=>{
-    const func=async()=>{
-      const id=localStorage.getItem('userId');
-      const response=await fetch(`http://localhost:4000/User/profile/${id}`)
-      const data=await response.json()
-      setPatient(data)
-      setAdmissions(data.medicalHistory);
-    }
-    func();
-  },[])
-
-  const [comments, setComments] = useState([
-    {
-      date: '2024-08-01',
-      content: 'Shared my experience with the new medication. It has been quite effective!',
-    },
-    {
-      date: '2024-07-15',
-      content: 'Participated in the discussion about recovery tips after surgery.',
-    },
-  ]);
-
-  const [newAdmission, setNewAdmission] = useState<admission>({
-    hospitalName: '',
-    admissionDate:"",
-    dischargeDate:"",
-    notes: '',
+  const userId=localStorage.getItem('userId');
+  const [admissions, setAdmissions] = useState<Admission[]>([]);
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [newAdmission, setNewAdmission] = useState<Admission>({
+    patient:'',
+    doctor: '',
+    date: '',
+    diagnosis: '',
+    prescription: '',
+    hospital: '', // Default to an empty string to allow for optionality
   });
 
   useEffect(() => {
-    const savedAdmissions = localStorage.getItem('admissions');
-    if (savedAdmissions) {
-      setAdmissions(JSON.parse(savedAdmissions));
-    }
+    const fetchPatientData = async () => {
+      const id = localStorage.getItem('userId');
+      const response = await fetch(`http://localhost:4000/User/profile/${id}`);
+      const data = await response.json();
+      setAdmissions(data.medicalHistory);
+      setComments(data.comments || []); // Assuming the comments are part of the user profile
+    };
+    fetchPatientData();
   }, []);
-
-  useEffect(() => {
-    localStorage.setItem('admissions', JSON.stringify(admissions));
-  }, [admissions]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setNewAdmission((prev) => ({ ...prev, [name]: value }));
-    
   };
 
-  const handleAddAdmission = async() => {
-    setAdmissions((prevAdmissions) =>(prevAdmissions? [...prevAdmissions, newAdmission]: [newAdmission]));
-    const updatedMedicalHistory = patient?.medicalHistory 
-    ? [...patient.medicalHistory, newAdmission] 
-    : [newAdmission];
+  const handleAddAdmission = async () => {
+    const id = localStorage.getItem('userId');
+    // console.log(id)
+    newAdmission.patient?`${id}`:"";
 
-  // Update the patient object with the new medical history
-  const updatedPatient = {
-    ...patient,
-    medicalHistory: updatedMedicalHistory,
-  };
+    const updatedAdmissions = [...admissions, newAdmission];
 
-  // Fetch user ID from local storage
-  const id = localStorage.getItem('userId');
+    const updatedPatientProfile = {
+      medicalHistory: updatedAdmissions,
+    };
 
-  // Send the updated patient profile to the server
-  const res = await fetch(`http://localhost:4000/User/updatePatientProfile/${id}`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(updatedPatient),
-  });
+    const res = await fetch(`http://localhost:4000/User/updatePatientProfile/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updatedPatientProfile),
+    });
 
-  // Log the updated patient object for debugging
-  console.log(updatedPatient);
+    if (res.ok) {
+      alert('Patient Profile Updated');
+      setAdmissions(updatedAdmissions);
+    } else {
+      alert('Error Updating Patient Profile');
+    }
 
-  // Handle the response
-  if (res.ok) {
-    alert('Patient Profile Updated');
-  } else {
-    alert('Error Updating Patient Profile');
-  }
-
-    setNewAdmission({ hospitalName: '', admissionDate:"", dischargeDate:"", notes: '' });
+    setNewAdmission({
+      patient:'',
+      doctor: '',
+      date: '',
+      diagnosis: '',
+      prescription: '',
+      hospital: '',
+    });
   };
 
   return (
@@ -113,31 +93,34 @@ const PatientHistory = () => {
 
         <section className="mb-12">
           <h2 className="text-3xl font-semibold text-blue-600 mb-6">
-            Hospital Admissions
+            Medical Admissions
           </h2>
           <div className="space-y-8">
-            
-            { admissions && admissions.map((admission, index) => (
-              <div
-                key={index}
-                className="p-6 bg-gradient-to-r from-white to-blue-50 rounded-lg shadow-md border-l-4 border-blue-500"
-              >
-                <h3 className="text-2xl font-bold text-gray-800">
-                  {admission.hospitalName}
-                </h3>
-                <p className="text-gray-600 mt-2">
-                  <span className="font-semibold">Admission Date:</span>{' '}
-                  {admission.admissionDate?admission.admissionDate.split('T')[0]:""}
-                </p>
-                <p className="text-gray-600 mt-1">
-                  <span className="font-semibold">Discharge Date:</span>{' '}
-                  {admission.dischargeDate?admission.dischargeDate.split('T')[0]:""}
-                </p>
-                <p className="text-gray-600 mt-1">
-                  <span className="font-semibold">Notes:</span> {admission.notes}
-                </p>
-              </div>
-            ))}
+            {admissions &&
+              admissions.map((admission, index) => (
+                <div
+                  key={index}
+                  className="p-6 bg-gradient-to-r from-white to-blue-50 rounded-lg shadow-md border-l-4 border-blue-500"
+                >
+                  <h3 className="text-2xl font-bold text-gray-800">
+                    Doctor: {admission.doctor}
+                  </h3>
+                  <p className="text-gray-600 mt-2">
+                    <span className="font-semibold">Date:</span> {admission.date.split('T')[0]}
+                  </p>
+                  <p className="text-gray-600 mt-1">
+                    <span className="font-semibold">Diagnosis:</span> {admission.diagnosis}
+                  </p>
+                  <p className="text-gray-600 mt-1">
+                    <span className="font-semibold">Prescription:</span> {admission.prescription}
+                  </p>
+                  {admission.hospital && (
+                    <p className="text-gray-600 mt-1">
+                      <span className="font-semibold">Hospital:</span> {admission.hospital}
+                    </p>
+                  )}
+                </div>
+              ))}
           </div>
 
           <div className="mt-12">
@@ -145,33 +128,41 @@ const PatientHistory = () => {
             <div className="mt-6 space-y-4">
               <input
                 type="text"
-                name="hospitalName"
-                value={newAdmission.hospitalName}
+                name="doctor"
+                value={newAdmission.doctor}
                 onChange={handleInputChange}
-                placeholder="Hospital Name"
+                placeholder="Doctor"
                 className="p-3 rounded-lg w-full border border-gray-300"
               />
               <input
                 type="date"
-                name="admissionDate"
-                value={newAdmission.admissionDate}
+                name="date"
+                value={newAdmission.date}
                 onChange={handleInputChange}
-                placeholder="Admission Date"
+                placeholder="Date"
                 className="p-3 rounded-lg w-full border border-gray-300"
               />
               <input
-                type="date"
-                name="dischargeDate"
-                value={newAdmission.dischargeDate}
+                type="text"
+                name="diagnosis"
+                value={newAdmission.diagnosis}
                 onChange={handleInputChange}
-                placeholder="Discharge Date"
+                placeholder="Diagnosis"
                 className="p-3 rounded-lg w-full border border-gray-300"
               />
               <textarea
-                name="notes"
-                value={newAdmission.notes}
+                name="prescription"
+                value={newAdmission.prescription}
                 onChange={handleInputChange}
-                placeholder="Notes"
+                placeholder="Prescription"
+                className="p-3 rounded-lg w-full border border-gray-300"
+              />
+              <input
+                type="text"
+                name="hospital"
+                value={newAdmission.hospital}
+                onChange={handleInputChange}
+                placeholder="Hospital (Optional)"
                 className="p-3 rounded-lg w-full border border-gray-300"
               />
               <button
