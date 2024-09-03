@@ -26,19 +26,19 @@ const userSchema = new mongoose.Schema({
         default: "" // Default value if not provided
     },
     contact: {
-        type: Number,
-        default: null, // Default value if not provided
-       
+        type: String,
+        unique: true,
+        default: "", // Default value is undefined
     },
     address: {
         type: String,
         default: "" // Default value if not provided
     },
-    medicalHistory: {
+    medicalHistory: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Medical Record',
-        default: "" // Default value if not provided
-    }
+        ref: 'MedicalRecord',
+        default: [] // Default value if not provided
+    }]
 
 }, { timestamps: true });
 

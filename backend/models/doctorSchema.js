@@ -4,38 +4,49 @@ const doctorSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
+        required: false,
+        default: undefined
+    },
+    name: {
+        type: String,
         required: true
     },
-    specialization: { 
-        type: String, 
-        required: true 
+    role: {
+        type: String,
+        required: true
     },
-    contactNumber: { 
-        type: String, 
-        required: true 
+    contactNumber: {
+        type: String,
+        required: false,
+        default: ""
     },
-    department: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Department'
+    department: {
+        type: String,
+        required: true,
     },
     availability: [{
-        day: { 
-            type: String, 
+        day: {
+            type: String,
             enum: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-            required: true 
+            required: false,
+            default: ""
         },
-        startTime: { 
+        startTime: {
             type: String,
-            required: true 
+            required: false,
+            default: ""
         },
-        endTime: { 
+        endTime: {
             type: String,
-            required: true 
+            required: false,
+            default: ""
         }
     }],
     hospitalId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Hospital'
+        ref: 'Hospital',
+        required: false,
+
     }
 }, { timestamps: true });
 

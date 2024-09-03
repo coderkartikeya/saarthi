@@ -1,34 +1,32 @@
 import mongoose from "mongoose";
 
+// Medical Record Schema
 const medicalRecordSchema = new mongoose.Schema({
-    patient: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Patient', 
-        required: true 
-    },
-    doctor: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Doctor', 
-        required: true 
-    },
-    date: { 
-        type: Date, 
-        default: Date.now 
-    },
-    diagnosis: { 
-        type: String, 
-        required: true 
-    },
-    prescription: { 
-        type: String 
-    },
-    notes: { 
-        type: String 
-    },
-    hospitalId: {
+    patient: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Hospital',
-        required: true // Required to track the hospital where the record was created
+        ref: 'User', // Reference to the User model
+        required: true
+    },
+    doctor: {
+        type: String,
+        required: true
+    },
+    date: {
+        type: Date,
+        default: Date.now
+    },
+    diagnosis: {
+        type: String,
+        required: true
+    },
+    prescription: {
+        type: String,
+        required: true
+    },
+    hospital: {
+        type: String,
+        required: false,
+        default: " "
     }
 }, { timestamps: true });
 
