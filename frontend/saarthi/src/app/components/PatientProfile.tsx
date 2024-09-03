@@ -31,6 +31,7 @@ const PatientProfile = () => {
         
       setPatient({ fullname, dateofbirth, gender, contact, address });
       // console.log(fullname, dateOfBirth, gender, contact, address, medicalHistory)
+      localStorage.setItem('name',fullname);
 
       }
       data();

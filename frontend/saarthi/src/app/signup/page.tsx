@@ -30,8 +30,8 @@ const Signup = () => {
 
       })
       const data=await response.json()
-      if(response.status==201){
-        
+      console.log(data)
+      if(response.status==201){        
         
         localStorage.setItem('userId',data.user._id);
         localStorage.setItem('email',data.user.email);

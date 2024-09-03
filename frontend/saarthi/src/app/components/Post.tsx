@@ -4,27 +4,38 @@ import { FaPen, FaRobot } from 'react-icons/fa';
 
 const PostPage = () => {
   const [postContent, setPostContent] = useState('');
-  const [suggestedContent, setSuggestedContent] = useState('');
+  const [suggestedContent, setSuggestedContent] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Function to get suggestions from Gemini API
   const generatePostWithGemini = async () => {
+    setIsLoading(true); // Set loading to true when fetching starts
     try {
-      const response = await fetch('https://api.gemini.com/v1/text-generation', {
+      const response = await fetch('http://localhost:3000/api/generate', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `AIzaSyC1TW1J9yJnIeNDiruRuUMMBfcWN1Ic5ns`, // Replace with your actual API key
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          prompt: 'I need help writing a post for the community about finding a hospital bed or other medical assistance.', // Customize as needed
+          prompt: 'I need help regarding  comment i can make on community as i want bed or other medical assistance in 30-40 words', // Customize as needed
         }),
       });
 
       const data = await response.json();
-      setSuggestedContent(data.generated_text); // Adjust based on the actual API response structure
+      const output = data.output;
+
+      // Corrected extraction of prompts, ensure it captures the full text
+      const extractedPrompts = output
+        .split(/\*\*Prompt \d+:\*\*/g) // Split on **Prompt x:** markers
+        .filter(Boolean)               // Remove empty strings
+        .map((prompt: string) => prompt.trim()); // Trim whitespace
+
+      setSuggestedContent(extractedPrompts);
     } catch (error) {
       console.error('Error fetching suggestion:', error);
-      setSuggestedContent('Sorry, we couldn\'t get a suggestion at this time.');
+      setSuggestedContent(['Sorry, we couldn\'t get a suggestion at this time.']);
+    } finally {
+      setIsLoading(false); // Set loading to false when fetching ends
     }
   };
 
@@ -32,14 +43,30 @@ const PostPage = () => {
     setPostContent(event.target.value);
   };
 
-  const handleUseSuggestion = () => {
-    setPostContent(suggestedContent);
+  const handleUseSuggestion = (suggestion: string) => {
+    setPostContent(suggestion);
   };
 
-  const handlePostSubmit = () => {
+  const handlePostSubmit = async() => {
+    try{
+      const response=await fetch('http://localhost:4000/posts',{
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json'
+          },
+          body:JSON.stringify({
+            user:localStorage.getItem('name'),
+            content:postContent
+            })
+      })
+      const data=await response.json()
+      console.log(data)
     console.log('Post submitted:', postContent);
     setPostContent('');
-    setSuggestedContent('');
+    setSuggestedContent([]);
+    } catch (error) {
+      console.error('Error submitting post:', error);
+      }
   };
 
   return (
@@ -58,17 +85,30 @@ const PostPage = () => {
         ></textarea>
       </div>
 
-      {suggestedContent && (
+      {isLoading ? (
         <div className="mb-6 p-6 bg-blue-100 rounded-lg shadow-inner">
-          <h2 className="text-2xl font-bold text-blue-800 mb-4">Gemini's Suggestion:</h2>
-          <p className="text-gray-700">{suggestedContent}</p>
-          <button
-            className="mt-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-lg"
-            onClick={handleUseSuggestion}
-          >
-            Use This Suggestion
-          </button>
+          <h2 className="text-2xl font-bold text-blue-800 mb-4">Loading...</h2>
+          <p className="text-gray-700">Please wait while we fetch suggestions for you.</p>
         </div>
+      ) : (
+        suggestedContent.length > 0 && (
+          <div className="mb-6 p-6 bg-blue-100 rounded-lg shadow-inner">
+            <h2 className="text-2xl font-bold text-blue-800 mb-4">Gemini's Suggestions:</h2>
+            <ul className="list-disc list-inside">
+              {suggestedContent.map((suggestion, index) => (
+                <li key={index} className="text-gray-700 mb-4">
+                  <p>{suggestion}</p>
+                  <button
+                    className="mt-2 bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-4 rounded-lg"
+                    onClick={() => handleUseSuggestion(suggestion)}
+                  >
+                    Use This Suggestion
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )
       )}
 
       <div className="flex justify-between items-center mt-8">

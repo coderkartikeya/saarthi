@@ -36,8 +36,10 @@ const Login = () => {
       console.log(response);
   
       if (request.status === 201) { 
+        console.log(response);
         localStorage.setItem('userId', response.user._id);
         localStorage.setItem('email', response.user.email);
+        localStorage.setItem('name',response.user.name);
   
         
         if (role === "patient") {
